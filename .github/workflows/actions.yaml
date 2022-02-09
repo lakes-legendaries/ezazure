@@ -1,0 +1,65 @@
+name: Actions
+
+on:
+  push:
+    branches:
+      - actions
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: actions
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        ref: actions
+        token: ${{ secrets.GIT_TOKEN }}
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+          python-version: 3.9
+    - name: Configure git
+      run: |
+        git config --global user.name "version bot"
+        git config --global user.email "<>"
+    - name: Increment version, tag branch
+      run: |
+        OLD_VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
+        NEW_VERSION=$(echo $OLD_VERSION | perl -pe 's/^((\d+\.)*)(\d+)(.*)$/$1.($3+1).$4/e')
+        for file in setup.py docsrc/conf.py; do
+            sed s/$OLD_VERSION/$NEW_VERSION/g $file -i
+            git add $file
+        done
+        git commit -m "Release $NEW_VERSION [no ci]"
+        git tag $NEW_VERSION
+    - name: Update documentation
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install .
+        pip install -r requirements.txt
+        docsrc/build
+    - name: Push to actions
+      run: |
+        git push origin actions:actions
+    - name: Push to main
+      run: |
+        git push origin actions:main -f
+    - name: Push tag
+      run: |
+        VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
+        git push origin $VERSION
+    - name: Publish docs to GitHub pages (docs branch)
+      run: |
+        git add docs -f
+        git commit docs -m "Updating Documentation"
+        git push origin actions:docs -f
+    - name: Publish to PyPi
+      env:
+        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        source .venv/bin/activate
+        python -m build
+        python -m twine upload dist/*.tar.gz -u __token__ -p $PYPI_TOKEN
