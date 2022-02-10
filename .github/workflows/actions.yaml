@@ -28,6 +28,7 @@ jobs:
         echo "container: litmon-private" >> .ezazure
     - name: Test code
       run: |
+        export PYTHONPATH=.
         python -m venv .venv
         source .venv/bin/activate
         pip install --upgrade pip
@@ -39,6 +40,7 @@ jobs:
     - name: Test requirements (python3.9)
       run: |
         if [[ "${{ matrix.PYTHON_VERSION }}" == "3.9" ]]; then
+          export PYTHONPATH=.
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
