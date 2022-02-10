@@ -40,6 +40,7 @@ Quickstart
    .. code-block:: bash
 
       python -m ezazure --download --regex FNAME.*
+      python -m ezazure --upload --regex PATH/FNAME[0-9]+\.csv
 
 #. You can also use this package as an API:
 
