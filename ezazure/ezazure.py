@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from os import listdir, remove
-from os.path import basename, dirname, expanduser, isfile, join
+from os.path import basename, dirname, expanduser, isdir, isfile, join
 import re
 
 from azure.storage.blob import (
@@ -176,17 +176,23 @@ class Azure:
         # process regular expresion
         if regex:
 
+            # get local files
+            directory = dirname(file)
+            if len(directory) == 0:
+                directory = '.'
+            dfiles = listdir(directory)
+
             # upload each file that matches pattern
             [
                 self.upload(
-                    file=join(dirname(file), _file),
+                    file=join(directory, _file),
                     container=container,
                     regex=False,
                     replace=replace,
                     update_listing=False,
                 )
-                for _file in listdir(dirname(file))
-                if re.search(file, join(dirname(file), _file)) is not None
+                for _file in dfiles
+                if re.search(file, join(directory, _file)) is not None
             ]
 
             # update listing
