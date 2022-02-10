@@ -8,6 +8,7 @@ on:
 jobs:
   test_code:
     runs-on: ubuntu-latest
+    environment: actions
     strategy:
       matrix:
         PYTHON_VERSION: ['3.8', '3.9', '3.10']
@@ -28,8 +29,6 @@ jobs:
         echo "container: litmon-private" >> .ezazure
     - name: Test code
       run: |
-        ls
-        cat .ezazure
         export PYTHONPATH=.
         python -m venv .venv
         source .venv/bin/activate
