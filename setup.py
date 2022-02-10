@@ -23,5 +23,5 @@ if __name__ == '__main__':
             'azure-storage-blob',
             'pyyaml',
         ],
-        python_requires='>=3.8',
+        python_requires='>=3.7',
     )

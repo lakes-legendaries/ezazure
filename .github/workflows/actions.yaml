@@ -6,7 +6,50 @@ on:
       - actions
 
 jobs:
+  test_code:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        PYTHON_VERSION: ['3.7', '3.8', '3.9', '3.10']
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        ref: actions
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+    - name: Create .ezazure file
+      env:
+        AZURE_TOKEN: ${{ secrets.AZURE_TOKEN }}
+      run: |
+        echo "connection_str: $AZURE_TOKEN" > .ezazure
+        echo "container: litmon-private" >> .ezazure
+    - name: Test code
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install pytest
+        pip install .
+        pytest
+        deactivate
+        rm -rfd .venv
+    - name: Test requirements (python3.9)
+      run: |
+        if [[ "${{ matrix.PYTHON_VERSION }}" == "3.9" ]]; then
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pytest
+          deactivate
+          rm -rfd .venv
+        fi
+
   release:
+    needs: test_code
     runs-on: ubuntu-latest
     environment: actions
     steps:
