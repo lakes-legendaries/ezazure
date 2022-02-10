@@ -28,6 +28,8 @@ jobs:
         echo "container: litmon-private" >> .ezazure
     - name: Test code
       run: |
+        ls
+        cat .ezazure
         export PYTHONPATH=.
         python -m venv .venv
         source .venv/bin/activate
