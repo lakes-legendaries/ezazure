@@ -36,4 +36,4 @@ NEVER merge into the :code:`main` branch. Instead, merge into the
 #. The version number will be updated, and the repo will be
    tagged with the version number.
 
-#. All changes will be merged into:code:`main`.
+#. All changes will be merged into :code:`main`.
