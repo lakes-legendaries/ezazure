@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from os import listdir, remove
-from os.path import basename, dirname, expanduser, isdir, isfile, join
+from os.path import basename, dirname, expanduser, isfile, join
 import re
 
 from azure.storage.blob import (
@@ -316,10 +316,8 @@ class Azure:
             for file in files:
                 if file == fname:
                     continue
-                print(
-                    f'<a href={container_url}/{file}>{file}</a><br>',
-                    file=fid,
-                )
+                link = f"{container_url}/{file.replace(' ', r'%20')}"
+                print(f'<a href={link}>{file}</a><br>', file=fid)
 
         # upload directory listing
         self.upload(
