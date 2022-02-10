@@ -1,5 +1,6 @@
 from os import remove
 from os.path import isfile
+from platform import python_version
 from random import random
 from subprocess import run
 
@@ -21,7 +22,7 @@ def test_api_download():
 
 
 def test_api_upload():
-    fname = 'test1.file'
+    fname = f'test1.{python_version()}.file'
     try:
         value = f'{random()}'
         with open(fname, 'w') as file:
@@ -46,7 +47,7 @@ def test_cli_download():
 
 
 def test_cli_upload():
-    fname = 'test1.file'
+    fname = f'test1.{python_version()}.file'
     try:
         value = f'{random()}'
         with open(fname, 'w') as file:
