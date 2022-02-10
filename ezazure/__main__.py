@@ -58,7 +58,8 @@ if __name__ == '__main__':
 
     # get kwargs
     kwargs = {
-        key: value for key, value in vars(args).items()
+        key: value
+        for key, value in vars(args).items()
         if value is not None
         and key != 'upload'
         and key != 'download'
