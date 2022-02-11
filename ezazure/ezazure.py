@@ -31,36 +31,71 @@ class Azure:
            container: litmon-private
 
         :code:`container` is only the default storage container, and can be
-        overwritten in the :meth:`upload` and :meth:`download` functions.
+        overwritten in the :meth:`upload` and :meth:`download` functions. If
+        it's not provided in this file, then you must supply :code:`container`
+        variable in :meth:`upload` and :meth:`download`.
+    check: bool, optional, default=False
+        If :code:`config_fname` cannot be read on :code:`__init__()`, and
+        :code:`check==True`, then throw an error. (Otherwise, errors are only
+        thrown on :meth:`upload` and :meth`download` calls.)
+
+        By keeping :code:`check==False`, then you can have code that looks like
+        this:
+
+        .. code-block:: python
+
+           from ezazure import Azure
+
+
+           Azure().download(fname)
+
+        and your code will succeed if:
+
+        #. :code:`fname` exists locally (regardless of whether you have Azure
+           credentials in your :code:`config_fname` file), or
+        #. :code:`fname` exists on your cloud and you have Azure credentials in
+           your :code:`config_fname` file.
+
+        This provides a tight cloud integration that still works even if you
+        don't have access to the cloud, but have the files locally.
 
     Attributes
     ----------
     client: azure.storage.blob.BlobServiceClient
         Client for interfacing with Azure
     """
-    def __init__(self, /, config_fname: str = '.ezazure'):
+    def __init__(
+        self,
+        /,
+        config_fname: str = '.ezazure',
+        *,
+        check: bool = False,
+    ):
+
+        # save passed
+        self._config_fname = config_fname
+        self._check = check
+
+        # check for configuration file
+        if not isfile(config_fname):
+            self.client = None
+            if check:
+                self._check_connection()
+            else:
+                return
 
         # load configuration
-        try:
+        config = yaml.safe_load(open(config_fname, 'r'))
 
-            # load config from file
-            config = yaml.safe_load(open(config_fname, 'r'))
+        # get default container
+        self._container = (
+            config['container']
+            if 'container' in config
+            else None
+        )
 
-            # get connection string
-            connection_str = config['connection_str']
-
-            # get default container
-            self._container = config['container']
-
-        # missing / improperly formatted file
-        except (FileNotFoundError, KeyError):
-            raise RuntimeError(
-                f'ezazure.Azure() requires a {config_fname} file that '
-                'contains your connection parameters. See the documentation '
-                'for required fields.'
-            )
-
-        # load connection str from file
+        # get connection string
+        connection_str = config['connection_str']
         if 'AccountKey' not in connection_str:
             connection_str = expanduser(connection_str)
             try:
@@ -72,12 +107,57 @@ class Azure:
                     f'{connection_str}.'
                 )
 
-        # extract account name
+        # get account name
         self._account = \
             re.search(r'AccountName=([^;]*);', connection_str).group(1)
 
         # connect to Azure
         self.client = BlobServiceClient.from_connection_string(connection_str)
+
+    def _check_connection(self):
+        """Check connection to Azure
+
+        Raises
+        ------
+        FileNotFoundError
+            If :code:`config_fname` could not be found
+        """
+        if self.client is None:
+            raise FileNotFoundError(
+                f'ezazure.Azure() requires a {self._config_fname} file that '
+                'contains your connection_str and container.'
+            )
+
+    def _get_container(self, /, container: str) -> str:
+        """Get container name.
+
+        If :code:`container` is not :code:`None`, then return
+        :code:`container`. Otherwise, return :code:`container` from your
+        :code:`config_fname` file.
+
+        Parameters
+        ----------
+        container: str
+            current container name
+
+        Returns
+        -------
+        str
+            container name
+
+        Raises
+        ------
+        KeyError
+            If :code:`container` is :code:`None` and there's no default
+            container in your :code:`config_fname` file
+        """
+        if container is None:
+            if self._container is None:
+                raise KeyError(
+                    f'No default container given in {self._config_fname} file.'
+                )
+            return self._container
+        return container
 
     def download(
         self,
@@ -102,7 +182,7 @@ class Azure:
             match. all files will be downloaded to the same directory.
         replace: bool, optional, default=False
             if :code:`dest/file` exists locally, then skip the download
-        
+
         Raises
         ------
         FileNotFoundError
@@ -131,9 +211,11 @@ class Azure:
         if not replace and isfile(file):
             return
 
-        # get default container
-        if container is None:
-            container = self._container
+        # check connection
+        self._check_connection()
+
+        # get container
+        container = self._get_container(container)
 
         # connect to Azure
         client: BlobClient = self.client.get_blob_client(
@@ -180,7 +262,7 @@ class Azure:
             if True, and if there is public access to :code:`container`, then
             update directory listing (with :meth:`_update_listing`) after
             uploading
-        
+
         Raises
         ------
         FileNotFoundError
@@ -216,13 +298,15 @@ class Azure:
             # return to stop processing
             return
 
+        # check connection
+        self._check_connection()
+
         # check that file exists
         if not isfile(file):
             raise FileNotFoundError(f'{file} does not exist locally')
-        
-        # get default container
-        if container is None:
-            container = self._container
+
+        # get container
+        container = self._get_container(container)
 
         # connect to Azure
         client: BlobClient = self.client.get_blob_client(
@@ -254,19 +338,13 @@ class Azure:
         if update_listing:
             self._update_listing(container=container)
 
-    def _get_listing(
-        self,
-        /,
-        *,
-        container: str = None
-    ) -> tuple(list[str], bool):
+    def _get_listing(self, /, container: str) -> tuple(list[str], bool):
         """Get list of files on server
 
         Parameters
         ----------
-        container: str, optional, default=None
-            if supplied, download from this container (instead of default
-            container listed in :code:`.ezazure`)
+        container: str
+            Download from this container
 
         Returns
         -------
@@ -275,10 +353,6 @@ class Azure:
         bool
             whether container has public access
         """
-
-        # get default container
-        if container is None:
-            container = self._container
 
         # generate client
         client: ContainerClient = self.client.get_container_client(
@@ -295,8 +369,8 @@ class Azure:
     def _update_listing(
         self,
         /,
+        container: str,
         *,
-        container: str = None,
         fname: str = 'directory.html'
     ):
         """Update the directory listing for the current container
@@ -309,16 +383,11 @@ class Azure:
 
         Parameters
         ----------
-        container: str, optional, default=None
-            if supplied, download from this container (instead of default
-            container listed in :code:`.ezazure`)
+        container: str
+            Download from this container
         fname: str, optional, default='directory.html'
             filename for directory listing
         """
-
-        # get default container
-        if container is None:
-            container = self._container
 
         # get file list
         files, public_access = self._get_listing(container=container)
