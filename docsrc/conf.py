@@ -1,6 +1,6 @@
 # basic info
 project = 'ezazure'
-version = '0.0.3'
+version = '0.0.4'
 copyright = '2021 Lake\'s Legendaries LLC'
 author = 'Mike Powell PhD'
 
