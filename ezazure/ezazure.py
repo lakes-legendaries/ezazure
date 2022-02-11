@@ -79,6 +79,7 @@ class Azure:
         # check for configuration file
         if not isfile(config_fname):
             self.client = None
+            self._container = None
             if check:
                 self._check_connection()
             else:
@@ -189,11 +190,11 @@ class Azure:
             If :code:`file` does not exist in Azure
         """
 
-        # get container
-        container = self._get_container(container)
-
         # process regular expresion
         if regex:
+
+            # get container
+            container = self._get_container(container)
 
             # download each file that matches pattern
             [
@@ -213,6 +214,9 @@ class Azure:
         # check if file exists
         if not replace and isfile(file):
             return
+
+        # get container
+        container = self._get_container(container)
 
         # check connection
         self._check_connection()
