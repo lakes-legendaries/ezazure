@@ -189,6 +189,9 @@ class Azure:
             If :code:`file` does not exist in Azure
         """
 
+        # get container
+        container = self._get_container(container)
+
         # process regular expresion
         if regex:
 
@@ -213,9 +216,6 @@ class Azure:
 
         # check connection
         self._check_connection()
-
-        # get container
-        container = self._get_container(container)
 
         # connect to Azure
         client: BlobClient = self.client.get_blob_client(
@@ -269,6 +269,9 @@ class Azure:
             If the file cannot be found locally
         """
 
+        # get container
+        container = self._get_container(container)
+
         # process regular expresion
         if regex:
 
@@ -304,9 +307,6 @@ class Azure:
         # check that file exists
         if not isfile(file):
             raise FileNotFoundError(f'{file} does not exist locally')
-
-        # get container
-        container = self._get_container(container)
 
         # connect to Azure
         client: BlobClient = self.client.get_blob_client(
