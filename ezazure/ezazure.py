@@ -102,6 +102,11 @@ class Azure:
             match. all files will be downloaded to the same directory.
         replace: bool, optional, default=False
             if :code:`dest/file` exists locally, then skip the download
+        
+        Raises
+        ------
+        FileNotFoundError
+            If :code:`file` does not exist in Azure
         """
 
         # process regular expresion
@@ -135,6 +140,10 @@ class Azure:
             container=container,
             blob=basename(file)
         )
+
+        # check that azure blob exists
+        if not client.exists():
+            raise FileNotFoundError(f'{file} does not exist in Azure')
 
         # download file
         with open(file, 'wb') as f:
@@ -171,6 +180,11 @@ class Azure:
             if True, and if there is public access to :code:`container`, then
             update directory listing (with :meth:`_update_listing`) after
             uploading
+        
+        Raises
+        ------
+        FileNotFoundError
+            If the file cannot be found locally
         """
 
         # process regular expresion
@@ -202,6 +216,10 @@ class Azure:
             # return to stop processing
             return
 
+        # check that file exists
+        if not isfile(file):
+            raise FileNotFoundError(f'{file} does not exist locally')
+        
         # get default container
         if container is None:
             container = self._container
