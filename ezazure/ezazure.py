@@ -326,8 +326,11 @@ class Azure:
                 return
 
         # check if is html file
-        if basename(file).rsplit('.')[-1] == 'html':
+        ext = basename(file).rsplit('.')[-1]
+        if ext == 'html':
             content_settings = ContentSettings(content_type='text/html')
+        elif ext == 'css':
+            content_settings = ContentSettings(content_type='text/css')
         else:
             content_settings = None
 
