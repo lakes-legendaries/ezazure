@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
         # standard info
         name='ezazure',
-        version='0.0.7',
+        version='0.0.8',
         description='easy azure interface for uploading & downloading files',
         author='Mike Powell PhD',
         author_email='mike@lakeslegendaries.com',
