@@ -26,7 +26,7 @@ jobs:
         AZURE_TOKEN: ${{ secrets.AZURE_TOKEN }}
       run: |
         echo "connection_str: $AZURE_TOKEN" > .ezazure
-        echo "container: litmon-private" >> .ezazure
+        echo "container: data" >> .ezazure
     - name: Test code
       run: |
         export PYTHONPATH=.
