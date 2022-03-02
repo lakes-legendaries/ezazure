@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; ezazure  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to this Repo" href="dev.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> ezazure
+          </a>
+              <div class="version">
+                0.0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Contributing to this Repo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ezazure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<span id="model"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ezazure.ezazure.Azure">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ezazure.ezazure.</span></span><span class="sig-name descname"><span class="pre">Azure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_fname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.ezazure'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ezazure.ezazure.Azure" title="Permalink to this definition"></a></dt>
+<dd><p>Easy Azure interface for uploading/downloading files</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>config_fname: str, optional, default=’.ezazure’</strong></dt><dd><p>Configuration file, containing your azure connection string (which can
+be the actual connection string, or the name of a file that contains
+your connection string) and your azure container. Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">connection_str</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/secrets/azure</span><span class="w"></span>
+<span class="nt">container</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litmon-private</span><span class="w"></span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">container</span></code> is only the default storage container, and can be
+overwritten in the <a class="reference internal" href="#ezazure.ezazure.Azure.upload" title="ezazure.ezazure.Azure.upload"><code class="xref py py-meth docutils literal notranslate"><span class="pre">upload()</span></code></a> and <a class="reference internal" href="#ezazure.ezazure.Azure.download" title="ezazure.ezazure.Azure.download"><code class="xref py py-meth docutils literal notranslate"><span class="pre">download()</span></code></a> functions. If
+it’s not provided in this file, then you must supply <code class="code docutils literal notranslate"><span class="pre">container</span></code>
+variable in <a class="reference internal" href="#ezazure.ezazure.Azure.upload" title="ezazure.ezazure.Azure.upload"><code class="xref py py-meth docutils literal notranslate"><span class="pre">upload()</span></code></a> and <a class="reference internal" href="#ezazure.ezazure.Azure.download" title="ezazure.ezazure.Azure.download"><code class="xref py py-meth docutils literal notranslate"><span class="pre">download()</span></code></a>.</p>
+</dd>
+<dt><strong>check: bool, optional, default=False</strong></dt><dd><p>If <code class="code docutils literal notranslate"><span class="pre">config_fname</span></code> cannot be read on <code class="code docutils literal notranslate"><span class="pre">__init__()</span></code>, and
+<code class="code docutils literal notranslate"><span class="pre">check==True</span></code>, then throw an error. (Otherwise, errors are only
+thrown on <a class="reference internal" href="#ezazure.ezazure.Azure.upload" title="ezazure.ezazure.Azure.upload"><code class="xref py py-meth docutils literal notranslate"><span class="pre">upload()</span></code></a> and :meth`download` calls.)</p>
+<p>By keeping <code class="code docutils literal notranslate"><span class="pre">check==False</span></code>, then you can have code that looks like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ezazure</span> <span class="kn">import</span> <span class="n">Azure</span>
+
+<span class="n">Azure</span><span class="p">()</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and your code will succeed if:</p>
+<ol class="arabic simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">fname</span></code> exists locally (regardless of whether you have Azure
+credentials in your <code class="code docutils literal notranslate"><span class="pre">config_fname</span></code> file), or</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">fname</span></code> exists on your cloud and you have Azure credentials in
+your <code class="code docutils literal notranslate"><span class="pre">config_fname</span></code> file.</p></li>
+</ol>
+<p>This provides a tight cloud integration that still works even if you
+don’t have access to the cloud, but have the files locally.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>client: azure.storage.blob.BlobServiceClient</strong></dt><dd><p>Client for interfacing with Azure</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ezazure.ezazure.Azure.download" title="ezazure.ezazure.Azure.download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download</span></code></a>(file, *[, container, regex, replace])</p></td>
+<td><p>Download file from Azure</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ezazure.ezazure.Azure.upload" title="ezazure.ezazure.Azure.upload"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upload</span></code></a>(file, *[, container, regex, replace, ...])</p></td>
+<td><p>Upload file to Azure</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ezazure.ezazure.Azure.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ezazure.ezazure.Azure.download" title="Permalink to this definition"></a></dt>
+<dd><p>Download file from Azure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>file: str</strong></dt><dd><p>file to download</p>
+</dd>
+<dt><strong>container: str, optional, default=None</strong></dt><dd><p>if supplied, download from this container (instead of default
+container listed in <code class="code docutils literal notranslate"><span class="pre">.ezazure</span></code>)</p>
+</dd>
+<dt><strong>regex: bool, optional, default=False</strong></dt><dd><p>treat <code class="code docutils literal notranslate"><span class="pre">file</span></code> as a regex expression. download all files that
+match. all files will be downloaded to the same directory.</p>
+</dd>
+<dt><strong>replace: bool, optional, default=False</strong></dt><dd><p>if <code class="code docutils literal notranslate"><span class="pre">dest/file</span></code> exists locally, then skip the download</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt>FileNotFoundError</dt><dd><p>If <code class="code docutils literal notranslate"><span class="pre">file</span></code> does not exist in Azure</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ezazure.ezazure.Azure.upload">
+<span class="sig-name descname"><span class="pre">upload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_listing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ezazure.ezazure.Azure.upload" title="Permalink to this definition"></a></dt>
+<dd><p>Upload file to Azure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>file: str</strong></dt><dd><p>file to upload. This file will be uploaded as
+<code class="code docutils literal notranslate"><span class="pre">basename(file)</span></code>. (I.e. it will NOT be uploaded to a
+directory within the container, but rather to the container root
+level.)</p>
+</dd>
+<dt><strong>container: str, optional, default=None</strong></dt><dd><p>if supplied, download from this container (instead of default
+container listed in <code class="code docutils literal notranslate"><span class="pre">.ezazure</span></code>)</p>
+</dd>
+<dt><strong>regex: bool, optional, default=False</strong></dt><dd><p>treat <code class="code docutils literal notranslate"><span class="pre">file</span></code> as a regex expression. upload all files that
+match. all files must be in the same directory.</p>
+</dd>
+<dt><strong>replace: bool, optional, default=True</strong></dt><dd><p>replace existing file on server if it exists</p>
+</dd>
+<dt><strong>update_listing: bool, optional, default=True</strong></dt><dd><p>if True, and if there is public access to <code class="code docutils literal notranslate"><span class="pre">container</span></code>, then
+update directory listing (with <code class="xref py py-meth docutils literal notranslate"><span class="pre">_update_listing()</span></code>) after
+uploading</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt>FileNotFoundError</dt><dd><p>If the file cannot be found locally</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev.html" class="btn btn-neutral float-right" title="Contributing to this Repo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021 Lake&#39;s Legendaries LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
