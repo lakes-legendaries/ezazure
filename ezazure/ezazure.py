@@ -233,7 +233,7 @@ class Azure:
 
         # download file
         with open(file, 'wb') as f:
-            f.write(client.download_blob().readall())
+            client.download_blob().readinto(f)
 
     def upload(
         self,
